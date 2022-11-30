@@ -1,8 +1,9 @@
 import {ChangeEvent, FormEvent, useState} from 'react';
 import {useDispatch} from "react-redux";
-import {setLink} from "../../app/form-data/formDataSlice";
+import { setVideoID } from "../../app/form-data/formDataSlice";
 import styles from "./link-form.module.scss";
 import {incrementStage} from "../../app/stage/stageSlise";
+import {getVideoIDFromLink} from "../../helpers/getVideoIDFromLink";
 
 function LinkForm() {
     const [value, setValue] = useState<string>('Ссылка на видео Youtube');
@@ -14,9 +15,12 @@ function LinkForm() {
 
     function handleSubmit(e: FormEvent) {
         if (value) {
-            dispatch(setLink(value));
-            dispatch(incrementStage());
-            e.preventDefault();
+            const supposedVideoID = getVideoIDFromLink(value);
+            if (supposedVideoID) {
+                dispatch(setVideoID(supposedVideoID));
+                dispatch(incrementStage());
+                e.preventDefault();
+            }
         }
     }
 
