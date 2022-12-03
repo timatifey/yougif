@@ -11,6 +11,8 @@ import styles from './time-format.module.scss';
 import {setDuration} from "../../app/form-data/formDataSlice";
 import {incrementStage} from "../../app/stage/stageSlise";
 
+const TIME_REG = new RegExp('[0-9]{2,}:[0-9]{2}:[0-9]{2}');
+
 function TimeForm() {
     const [fromValue, setFromValue] = useState('00:00:00');
     const [toValue, setToValue] = useState('00:00:00');
@@ -26,10 +28,14 @@ function TimeForm() {
                 max.current = getTimeInSecondsFromYTTimeString(r);
                 setToValue(convertSecondsToTimeString(max.current));
             });
-    }, [videoID]);
+    }, [requestLink]);
 
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
+        console.log(TIME_REG!.test(fromValue), TIME_REG!.test(toValue))
+        if (!TIME_REG.test(fromValue) || !TIME_REG.test(toValue)) {
+            return;
+        }
         const fromValueInSeconds = convertTimeStringToSeconds(fromValue);
         const toValueInSeconds = convertTimeStringToSeconds(toValue);
         console.log(fromValueInSeconds, toValueInSeconds, fromValueInSeconds + toValueInSeconds)
