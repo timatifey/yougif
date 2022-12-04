@@ -7,13 +7,13 @@ import {
     convertTimeStringToSeconds,
     getTimeInSecondsFromYTTimeString
 } from "../../helpers/time-converter";
-import styles from './time-format.module.scss';
+import styles from './time-format-with-widget.module.scss';
 import {setDuration} from "../../app/form-data/formDataSlice";
 import {incrementStage} from "../../app/stage/stageSlise";
 
 const TIME_REG = new RegExp('[0-9]{2,}:[0-9]{2}:[0-9]{2}');
 
-function TimeForm() {
+function TimeFormWithWidget() {
     const [fromValue, setFromValue] = useState('00:00:00');
     const [toValue, setToValue] = useState('00:00:00');
     const dispatch = useDispatch();
@@ -62,24 +62,39 @@ function TimeForm() {
     }
 
     return (
-        <form className={styles.form} onSubmit={handleSubmit}>
-            <label className={styles.form__label}>
-                От:
-                <input className={styles.form__input} type="text" value={fromValue} onChange={handleFromChange}/>
-            </label>
-            <label className={styles.form__label}>
-                До:
-                <input className={styles.form__input} type="text" value={toValue} onChange={handleToChange}/>
-            </label>
+        <>
+            <div className={styles.fields_and_widget}>
+                <form className={styles.fields_and_widget__fields} onSubmit={handleSubmit}>
+                    <label className={styles.fields_and_widget__fields__label}>
+                        От:
+                        <input className={styles.fields_and_widget__fields__input}
+                               type="text"
+                               value={fromValue}
+                               onChange={handleFromChange}/>
+                    </label>
+                    <label className={styles.fields_and_widget__fields__label}>
+                        До:
+                        <input className={styles.fields_and_widget__fields__input}
+                               type="text"
+                               value={toValue}
+                               onChange={handleToChange}/>
+                    </label>
+                </form>
+                <iframe className={styles.fields_and_widget__widget}
+                        src={`https://www.youtube.com/embed/${videoID}`}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen>
+                </iframe>
+            </div>
 
-            <button className={styles.form__button}
+            <button className={styles.submit__button}
                     type="button"
                     onSubmit={handleSubmit}
                     onClick={handleSubmit}>
                 Супер
             </button>
-        </form>
+        </>
     );
 }
 
-export default TimeForm;
+export default TimeFormWithWidget;
