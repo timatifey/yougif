@@ -3,5 +3,5 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('youtube/', views.download_youtube_video),
+    path('youtube/', views.convert_youtube_video),
 ]

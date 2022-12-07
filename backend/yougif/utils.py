@@ -8,9 +8,7 @@ class YouTubeVideo:
     def __init__(self, url: str):
         try:
             self._data = youtube_dl.YoutubeDL().extract_info(url, download=False)
-            self.video_url = next(
-                data['url'] for data in self._data['formats'] if 'none' not in [data['acodec'], data['vcodec']]
-            )
+            self.video_url = next(data['url'] for data in self._data['formats'] if data['vcodec'] != 'none')
             self.title = self._data['title']
         except Exception:
             raise ValidationError({"message": 'Incorrect URL'})
