@@ -2,7 +2,7 @@ import sys
 
 from rest_framework import status
 from rest_framework.decorators import api_view
-from django.http import JsonResponse
+from django.http import FileResponse
 
 from yougif import utils
 import urllib.request
@@ -11,9 +11,7 @@ from moviepy.editor import VideoFileClip
 
 @api_view()
 def convert_youtube_video(request):
-    data = utils.YouTubeVideo(
-        url=request.query_params.get('url', None)
-    )
+    data = utils.YouTubeVideo(url=request.query_params.get('url', None))
     start_time, end_time = request.query_params.get('start_time', None), request.query_params.get('end_time', None)
     title = data.title
     new_title = title.replace(' ', '_')[:5]
@@ -32,15 +30,7 @@ def convert_youtube_video(request):
     clip.write_gif(gif_filename)
     print(f"Finish converting {title} into {gif_filename}")
     urllib.request.urlcleanup()
-    return JsonResponse(
-        data={
-            "title": title,
-            "url": video_url,
-            "start_time": start_time,
-            "end_time": end_time
-        },
-        status=status.HTTP_200_OK
-    )
+    return FileResponse(open(gif_filename, 'rb'))
 
 
 def report_download_hook(block_number, read_size, total_file_size):
