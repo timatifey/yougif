@@ -2,35 +2,59 @@ import sys
 
 from rest_framework import status
 from rest_framework.decorators import api_view
-from django.http import FileResponse
+from rest_framework.exceptions import ValidationError
+from django.http import FileResponse, JsonResponse
 
 from yougif import utils
-import urllib.request
-from moviepy.editor import VideoFileClip
 
 
 @api_view()
 def convert_youtube_video(request):
-    data = utils.YouTubeVideo(url=request.query_params.get('url', None))
-    start_time, end_time = request.query_params.get('start_time', None), request.query_params.get('end_time', None)
-    title = data.title
-    new_title = title.replace(' ', '_')[:5]
-    video_url = data.video_url
-    gif_filename = f'{new_title}.gif'
+    try:
+        url = request.query_params.get('url', None)
+        start_time, end_time = request.query_params.get('start_time', None), request.query_params.get('end_time', None)
 
-    print(f"Start downloading {title} by url={video_url}")
-    filepath, _ = urllib.request.urlretrieve(
-        url=video_url,
-        reporthook=report_download_hook
-    )
-    print(f"\nFinish downloading {title} by url={video_url}")
+        if url is None or start_time is None or end_time is None:
+            raise ValueError("You need url, start_time, end_time params")
 
-    print(f"Start converting {title} into {gif_filename}")
-    clip = VideoFileClip(filepath).subclip(start_time, end_time)
-    clip.write_gif(gif_filename)
-    print(f"Finish converting {title} into {gif_filename}")
-    urllib.request.urlcleanup()
-    return FileResponse(open(gif_filename, 'rb'))
+        start_time, end_time = int(start_time), int(end_time)
+
+        data = utils.YouTubeVideo(url=url)
+
+        FIVE_MINUTES = 60 * 5
+
+        if data.duration >= FIVE_MINUTES:
+            raise ValidationError("Video duration greater than 5 minutes")
+
+        if not 0 <= start_time < end_time <= data.duration:
+            raise ValidationError("Not valid condition: 0 <= start time < end time <= video duration")
+
+        gif_length = end_time - start_time
+        TEN_SECONDS = 10
+        if gif_length > TEN_SECONDS:
+            raise ValidationError("You can't convert video into more than 10 second gif file")
+
+        print(f"Start downloading {data.title} by url={data.video_url}")
+        video_filepath = data.download_video(report_download_hook)
+        print(f"\nFinish downloading {data.title} by url={data.video_url}")
+
+        print(f"Start converting {data.title}")
+        gif_filepath = data.convert_video_into_gif(video_filepath, start_time, end_time)
+        print(f"Finish converting {data.title}")
+
+        data.cleanup()
+        gif_file_stream = open(gif_filepath, 'rb')
+
+        return FileResponse(gif_file_stream)
+    except Exception as e:
+        if hasattr(e, 'detail'):
+            msg = e.detail[0]
+        else:
+            msg = str(e)
+        return JsonResponse(
+            data={"response": msg},
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
 
 def report_download_hook(block_number, read_size, total_file_size):
