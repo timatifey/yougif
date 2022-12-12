@@ -1,6 +1,8 @@
 import styles from "./submit-button.module.scss";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {incrementStage, setStage} from "../../app/stage/stageSlise";
+import {downloadFile} from "../../helpers/downloadFile";
+import {RootState} from "../../app/rootReducer";
 
 export enum SubmitButtonActions {
     NEXT_STAGE,
@@ -14,6 +16,7 @@ export interface SubmitButtonProps {
 
 function SubmitButton({title, action}: SubmitButtonProps) {
     const dispatch = useDispatch()
+    const gifLinkState = useSelector((state: RootState) => state.gifLink)
 
     return (
         <button
@@ -26,6 +29,7 @@ function SubmitButton({title, action}: SubmitButtonProps) {
                         break;
                     }
                     default: {
+                        downloadFile(gifLinkState.link, 'gif');
                         dispatch(setStage(1));
                         break;
                     }
