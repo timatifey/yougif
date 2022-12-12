@@ -1,6 +1,6 @@
 # YouGif
 
-Задачей проекта является разработка сервиса по созданию GIF файла из YouTube видео.
+Cервис по созданию GIF файла из YouTube видео.
 
 ### Функциональные требования
 
@@ -18,6 +18,22 @@
 * Загрузка видео с YouTube
 * Преобразование mp4 в gif
 * Отправка Gif-файлов на клиент
+
+### Docker
+
+`$ git clone https://github.com/timatifey/yougif.git`
+
+`$ docker-compose build`
+
+`$ docker-compose up`
+
+### Демонстрация работы
+
+![](assets/1.jpg)
+![](assets/2.jpg)
+![](assets/3.jpg)
+![](assets/4.jpg)
+![](assets/5.jpg)
 
 ### Политика лицензирования 
 
