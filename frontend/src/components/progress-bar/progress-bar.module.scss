@@ -1,7 +1,6 @@
-@import "styles/colors.scss";
 .loader {
-  border: 16px solid $clr_red;
-  border-top: 16px solid $clr_grey;
+  border: 16px solid var(--clr_red);
+  border-top: 16px solid var(--clr_grey);
   border-radius: 50%;
   width: 120px;
   height: 120px;

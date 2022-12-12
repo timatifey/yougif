@@ -1,3 +1,17 @@
+:root {
+  --clr_background: #FFFFFF;
+  --clr_text: #000000;
+  --clr_grey: #D9D9D9;
+  --clr_red: #DB222A;
+}
+
+[data-theme='dark'] {
+  --clr_background: #151414;
+  --clr_text: #FFFFFF;
+  --clr_grey: #D9D9D9;
+  --clr_red: #DB222A;
+}
+
 html,
 body {
   padding: 0;
