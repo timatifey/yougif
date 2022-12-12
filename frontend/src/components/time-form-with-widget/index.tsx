@@ -32,20 +32,17 @@ function TimeFormWithWidget() {
 
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
-        console.log(TIME_REG!.test(fromValue), TIME_REG!.test(toValue))
         if (!TIME_REG.test(fromValue) || !TIME_REG.test(toValue)) {
             return;
         }
         const fromValueInSeconds = convertTimeStringToSeconds(fromValue);
         const toValueInSeconds = convertTimeStringToSeconds(toValue);
-        console.log(fromValueInSeconds, toValueInSeconds, fromValueInSeconds + toValueInSeconds)
         if (fromValueInSeconds < 0) {
             return;
         }
         if (toValueInSeconds > max.current) {
             return;
         }
-        console.log(fromValueInSeconds, toValueInSeconds, fromValueInSeconds + toValueInSeconds)
         if (fromValueInSeconds + toValueInSeconds > 60) {
             return;
         }
