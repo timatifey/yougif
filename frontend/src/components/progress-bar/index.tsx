@@ -4,7 +4,6 @@ import {RootState} from "../../app/rootReducer";
 import {getGif} from "../../api/getGif";
 import {setGifLink} from "../../app/gif-link/gifLinkSlice";
 import {incrementStage} from "../../app/stage/stageSlise";
-import styles from "./progress-bar.module.scss";
 
 function ProgressBar() {
     const formData = useSelector((state: RootState) => state.formData);
@@ -19,7 +18,7 @@ function ProgressBar() {
     });
 
     return (
-        <div className={styles.loader}></div>
+        <div></div>
     );
 }
 
