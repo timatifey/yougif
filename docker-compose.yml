@@ -1,0 +1,28 @@
+version: "1"
+
+services:
+  backend:
+    container_name: yougif-backend
+    image: yougif/backend
+    build:
+      context: .
+      dockerfile: ./Dockerfile.backend
+    ports:
+      - "8000:8000"
+    networks:
+      - yougif_network
+  frontend:
+    container_name: yougif-frontend
+    image: youtube_downloader/frontend
+    environment:
+      YOUTUBE_API_KEY: "AIzaSyAh1IrF14LJMHYaepPW9nQ8Cdpmuc4CgkY"
+    build:
+      context: .
+      dockerfile: ./Dockerfile.frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - yougif_network
+
+networks:
+  yougif_network:
